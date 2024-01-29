@@ -1,0 +1,26 @@
+[0.530s] Invoking command in '/home/neilstuart/g11_ws/build/arm_pkg': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/neilstuart/g11_ws/build/arm_pkg/build --no-deps install_data
+[0.722s] running develop
+[0.723s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[0.723s]   warnings.warn(
+[0.723s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.723s]   warnings.warn(
+[0.758s] /usr/lib/python3/dist-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 2.4.0-elementary9-ubuntu7.1 is an invalid version and will not be supported in a future release
+[0.758s]   warnings.warn(
+[0.821s] running egg_info
+[0.821s] writing arm_pkg.egg-info/PKG-INFO
+[0.821s] writing dependency_links to arm_pkg.egg-info/dependency_links.txt
+[0.821s] writing entry points to arm_pkg.egg-info/entry_points.txt
+[0.821s] writing requirements to arm_pkg.egg-info/requires.txt
+[0.821s] writing top-level names to arm_pkg.egg-info/top_level.txt
+[0.823s] reading manifest file 'arm_pkg.egg-info/SOURCES.txt'
+[0.823s] writing manifest file 'arm_pkg.egg-info/SOURCES.txt'
+[0.824s] running build_ext
+[0.824s] Creating /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm-pkg.egg-link (link to .)
+[0.825s] Installing camera_interface script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[0.825s] Installing controls_generator script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[0.825s] Installing hardware_interface script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[0.825s] Installing image_processor script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[0.825s] 
+[0.825s] Installed /home/neilstuart/g11_ws/build/arm_pkg
+[0.825s] running install_data
+[0.843s] Invoked command in '/home/neilstuart/g11_ws/build/arm_pkg' returned '0': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/neilstuart/g11_ws/build/arm_pkg/build --no-deps install_data
