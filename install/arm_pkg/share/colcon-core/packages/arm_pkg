@@ -1,1 +1,1 @@
-cv_bridge:image_transport:numpy:opencv2:sensor_msgs:sensor_msgs std_msgs
+cv_bridge:image_transport:numpy:opencv2:pandas:sensor_msgs:sensor_msgs std_msgs:sklearn

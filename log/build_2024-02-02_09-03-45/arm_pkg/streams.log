@@ -1,0 +1,50 @@
+[0.776s] Invoking command in '/home/neilstuart/g11_ws/build/arm_pkg': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --uninstall --editable --build-directory /home/neilstuart/g11_ws/build/arm_pkg/build
+[1.002s] running develop
+[1.002s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[1.002s]   warnings.warn(
+[1.003s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.003s]   warnings.warn(
+[1.049s] /usr/lib/python3/dist-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 2.4.0-elementary9-ubuntu7.1 is an invalid version and will not be supported in a future release
+[1.049s]   warnings.warn(
+[1.120s] Removing /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm-pkg.egg-link (link to .)
+[1.142s] Invoked command in '/home/neilstuart/g11_ws/build/arm_pkg' returned '0': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --uninstall --editable --build-directory /home/neilstuart/g11_ws/build/arm_pkg/build
+[1.144s] Invoking command in '/home/neilstuart/g11_ws/arm_pkg': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../build/arm_pkg build --build-base /home/neilstuart/g11_ws/build/arm_pkg/build install --record /home/neilstuart/g11_ws/build/arm_pkg/install.log --single-version-externally-managed
+[1.350s] running egg_info
+[1.350s] writing ../build/arm_pkg/arm_pkg.egg-info/PKG-INFO
+[1.350s] writing dependency_links to ../build/arm_pkg/arm_pkg.egg-info/dependency_links.txt
+[1.350s] writing entry points to ../build/arm_pkg/arm_pkg.egg-info/entry_points.txt
+[1.350s] writing requirements to ../build/arm_pkg/arm_pkg.egg-info/requires.txt
+[1.350s] writing top-level names to ../build/arm_pkg/arm_pkg.egg-info/top_level.txt
+[1.352s] reading manifest file '../build/arm_pkg/arm_pkg.egg-info/SOURCES.txt'
+[1.352s] adding license file 'LICENSE'
+[1.352s] writing manifest file '../build/arm_pkg/arm_pkg.egg-info/SOURCES.txt'
+[1.352s] running build
+[1.352s] running build_py
+[1.352s] copying arm_pkg/controls_generator.py -> /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg
+[1.353s] running install
+[1.353s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.353s]   warnings.warn(
+[1.353s] running install_lib
+[1.353s] creating /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/image_processor.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/controls_generator.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/prediction_model.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/__init__.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/hardware_interface.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] copying /home/neilstuart/g11_ws/build/arm_pkg/build/lib/arm_pkg/camera_interface.py -> /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg
+[1.354s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/image_processor.py to image_processor.cpython-310.pyc
+[1.355s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/controls_generator.py to controls_generator.cpython-310.pyc
+[1.356s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/prediction_model.py to prediction_model.cpython-310.pyc
+[1.356s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/__init__.py to __init__.cpython-310.pyc
+[1.356s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/hardware_interface.py to hardware_interface.cpython-310.pyc
+[1.356s] byte-compiling /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg/camera_interface.py to camera_interface.cpython-310.pyc
+[1.357s] running install_data
+[1.357s] running install_egg_info
+[1.359s] Copying ../build/arm_pkg/arm_pkg.egg-info to /home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages/arm_pkg-0.0.0-py3.10.egg-info
+[1.359s] running install_scripts
+[1.373s] Installing camera_interface script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[1.373s] Installing controls_generator script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[1.373s] Installing hardware_interface script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[1.373s] Installing image_processor script to /home/neilstuart/g11_ws/install/arm_pkg/lib/arm_pkg
+[1.373s] writing list of installed files to '/home/neilstuart/g11_ws/build/arm_pkg/install.log'
+[1.390s] Invoked command in '/home/neilstuart/g11_ws/arm_pkg' returned '0': PYTHONPATH=/home/neilstuart/g11_ws/build/arm_pkg/prefix_override:/home/neilstuart/g11_ws/install/arm_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../build/arm_pkg build --build-base /home/neilstuart/g11_ws/build/arm_pkg/build install --record /home/neilstuart/g11_ws/build/arm_pkg/install.log --single-version-externally-managed

@@ -19,12 +19,8 @@ class ImageProcessor(Node):
             'image',
             self.image_callback,
             100)
-        # self.subscription = self.create_subscription(
-        #     Compressedmage,
-        #     'image',
-        #     self.image_callback,
-        #     100)
-        self.subscription  # prevent unused variable warning
+        
+        self.subscription 
         self.publisher_ = self.create_publisher(Float32MultiArray, 'xys', 10)
         self.frame_count = 0
         self.fps_start_time = time.time()
@@ -42,17 +38,19 @@ class ImageProcessor(Node):
         except CvBridgeError as exc:
             print("Error converting image")
 
-        # cv_img = self.bridge.compressed_imgmsg_to_cv2(msg)
         xys = get_ball_xys(cv_img)
-        # Process image and publish location
+        
+        # Process image and publish xys location
         self.publisher_.publish(xys)
-        if self.frame_count == 200:  # Give framerate info every 2.5 seconds
+
+        if self.frame_count == 30:  
             fps = self.frame_count / elapsed_time
-            self.get_logger().info(f'Receiving ({fps:.1f}FPS)')
+
+            self.get_logger().info('=================Recent State==================')
+            self.get_logger().info(f'{fps:.1f} FPS')
             self.fps_start_time = current_time
             self.frame_count = 0
-        elif self.frame_count % 20 == 0:
-            self.get_logger().info(f'XYS: {str(xys.data)}')
+            self.get_logger().info('X Y S : ' + ' '.join(str(round(i,2)) for i in xys.data))
 
 def get_ball_xys(cv_img):
     a = Float32MultiArray()
@@ -64,8 +62,8 @@ def get_ball_xys(cv_img):
     binary_img = cv2.inRange(img,lower,upper)
     contours, hierarchy = cv2.findContours(binary_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    #cv2.imshow('Binarized',binary_img)
-    #cv2.waitKey(1)
+    # cv2.imshow('Binarized',binary_img)
+    # cv2.waitKey(1)
     
     # Denoise
 
