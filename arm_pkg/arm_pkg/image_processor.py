@@ -20,7 +20,6 @@ class ImageProcessor(Node):
             self.image_callback,
             100)
         
-        self.subscription 
         self.publisher_ = self.create_publisher(Float32MultiArray, 'xys', 10)
         self.frame_count = 0
         self.fps_start_time = time.time()

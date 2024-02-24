@@ -9,7 +9,7 @@ from sklearn.linear_model import LinearRegression
 
 class PredictionModel:
     def __init__(self):
-        self.timestamped_position_df = pd.DataFrame(columns=['timestamp_ms', 'X', 'Y', 'Z'])
+        self.timestamped_position_df = pd.DataFrame(columns=['timestamp_ns', 'X', 'Y', 'Z'])
 
     # Predict the value of XYS at a timestamp. 
     def predict_future_vals(self, timestamp=None):
@@ -18,8 +18,8 @@ class PredictionModel:
     
     def add_data(self, txyz):
         if len(txyz) != 4:
-            raise ValueError("Data should have 4 elements: timestamp_ms, X, Y, Z")
-        data_dict = {'timestamp_ms': txyz[0], 'X': txyz[1], 'Y': txyz[2], 'Z': txyz[3]}
+            raise ValueError("Data should have 4 elements: timestamp_ns, X, Y, Z")
+        data_dict = {'timestamp_ns': txyz[0], 'X': txyz[1], 'Y': txyz[2], 'Z': txyz[3]}
         new_data = pd.DataFrame(data_dict, index=[0])
         self.timestamped_position_df = pd.concat([self.timestamped_position_df,new_data], ignore_index=True)
 
@@ -30,7 +30,7 @@ class QuadraticPredictionModel(PredictionModel):
     
     def predict_future_vals(self, timestamp):
         # Extracting features and target from stored data
-        X = self.timestamped_position_df['timestamp_ms'].values.reshape(-1, 1)
+        X = self.timestamped_position_df['timestamp_ns'].values.reshape(-1, 1)
         y = self.timestamped_position_df[['X', 'Y', 'scale_depth']].values
         
         # Fitting quadratic regression model separately for each feature
@@ -66,7 +66,6 @@ class ControlsGenerator(Node):
 
         self.model = PredictionModel()
 
-        self.subscription  # prevent unused variable warning
         self.publisher_ = self.create_publisher(Float32MultiArray, 'control', 10)
         self.i = 0
 

@@ -18,7 +18,6 @@ class CameraInterface(Node):
         self.camera = cv2.VideoCapture(0) 
         
         self.publisher_ = self.create_publisher(Image, 'image', 10)
-        #self.publisher_ = self.create_publisher(CompressedImage, 'image', 10)
         
         self.bridge = CvBridge()
         
@@ -27,20 +26,12 @@ class CameraInterface(Node):
     def timer_callback(self):
         ret, frame = self.camera.read()
 
-        # publish
         if ret:
-            #cv2.imshow('frame', frame)
-            #cv2.waitKey(1)
             
             img = self.bridge.cv2_to_imgmsg(frame, 'bgr8')
 
-            # img = self.bridge.cv2_to_compressed_imgmsg(frame, 'jpg')
             img.header.stamp = self.get_clock().now().to_msg()
             img.header.frame_id = str(self.i)      
-            
-            if (int(img.header.frame_id) % 20) == 0:
-                pass
-                #self.get_logger().info('Publishing... (%s)' % str(img.header.frame_id))
             
             self.publisher_.publish(img)
         
@@ -51,7 +42,7 @@ class CameraInterface(Node):
             self.b += 1
             if self.b % 30:
                 self.b = 0 
-                self.get_logger().warn('No image for the last 30 frames. ')
+                self.get_logger().warn('No image for the last 30 attempts. ')
             pass
         
 

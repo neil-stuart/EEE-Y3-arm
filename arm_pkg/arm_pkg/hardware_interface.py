@@ -11,10 +11,11 @@ class HardwareInterface(Node):
             'control',
             self.actuate_motors,
             10)
-        self.subscription  # prevent unused variable warning
 
     def actuate_motors(self, msg):
-        # Use the xyz position to determine direction arm needs to move 
+        pass
+
+    def find_nsteps_foreach_motor(self, angles):
         pass
 
 def main(args=None):
