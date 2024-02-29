@@ -10,7 +10,6 @@ As part of our third-year project at the University of Galway, my teammate and I
 
 ## Features 🚀
 - **Real-Time Object Detection**: Utilizes OpenCV for detecting objects with high accuracy and speed.
-- **PID Control**: Ensures smooth and precise movement of the robotic arm.
 - **Custom Circuit Design**: Includes power delivery, microcontroller setup, and stepper driver circuitry.
 
 ## Technology Stack 💻
