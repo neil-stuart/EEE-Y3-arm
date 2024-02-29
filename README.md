@@ -1,36 +1,43 @@
-# Real-Time Object Detection and Motor Control Project 🤖👀
+# Real-Time Object Detection and Reactive Motor Control for Dynamic Object Interaction 🤖👀
 
-## Overview
-As part of our third-year project at the University of Galway, my teammate and I embarked on developing a robotic arm capable of catching dynamic objects using real-time object detection and PID control. This project was carried out in the academic year 2023-2024, aiming to bridge the gap between theoretical knowledge and practical application in robotics and automation.
+## Project Overview 📌
 
-## Objectives 🎯
-- To design and build a robotic arm that can detect and respond to incoming objects in real-time.
-- Implement PID control to manage the arm's movements with precision.
-- Utilize ROS2 for arm control and Python with OpenCV for object detection.
+This project aims to develop and implement a system that integrates advanced sensor technologies and real-time object detection algorithms with an open-source robotic arm. The goal is to enable the arm to react to and attempt to catch objects thrown towards it, demonstrating the practical application of sensor technologies, computer vision, and control systems in dynamic and real-time object interaction.
 
-## Features 🚀
-- **Real-Time Object Detection**: Utilizes OpenCV for detecting objects with high accuracy and speed.
-- **Custom Circuit Design**: Includes power delivery, microcontroller setup, and stepper driver circuitry.
+### Contributors 👥
+- Neil Stuart
+- Jake van de Beek
 
-## Technology Stack 💻
-- **ROS2**: For controlling the robotic arm.
-- **Python & OpenCV**: For object detection and image processing.
-- **Electrical Design Tools**: For designing the robotic arm's circuitry and control systems.
+### Supervisors 👨‍🏫
+- Dr. Brian Deegan
+- Co-Assessor: Dr. Soumyajyoti Maji
 
-## Challenges & Solutions 😅
-- **Object Detection Latency**: Reduced latency by optimizing the image processing algorithm and selecting efficient hardware.
-- **Precise Motor Control**: Achieved precise control by fine-tuning the PID parameters through extensive testing.
+## System Components 🛠️
 
-## Outcomes & Learnings ✨
-- Successfully created a robotic arm that can detect and catch objects in real-time, demonstrating the feasibility of integrating computer vision with robotic control.
-- Enhanced understanding of robotics, computer vision, and control systems through practical application.
-- Developed problem-solving skills by overcoming challenges related to real-time processing and mechanical design.
+- **Robotic Arm**: BCN3D Moveo, chosen for its affordability, precision, and adaptability to project needs.
+- **Sensing and Vision**: Utilizes an Intel RealSense Camera for 3D object location and tracking.
+- **Computing Platform**: Runs on a Raspberry Pi 4, equipped to handle real-time image processing and motor control tasks.
+- **Software Stack**:
+  - **ROS2 (Robot Operating System 2)**: For orchestrating the system’s components, including motor control and sensor data integration.
+  - **OpenCV in Python**: For object detection and vision processing.
+  - **Custom PID Control**: Implemented for dynamic object interaction, aiming for precision in motor responses based on sensor inputs.
 
-## Future Directions 🌟
-- Integrate machine learning algorithms for improved object detection and classification.
-- Explore the use of more advanced sensors for enhanced detection and response capabilities.
+## Workspace Structure 📂
 
-## Conclusion & Reflections 📘
-This project provided a comprehensive learning experience, combining elements of mechanical engineering, electronics, and computer science. It underscored the importance of interdisciplinary knowledge and teamwork in solving complex engineering problems.
+The ROS workspace is organized to facilitate development, testing, and deployment of the project components. Below is the structure of the workspace **UPDATE**
 
-For inquiries or more details, please contact [Neil Stuart](mailto:neil.stuart11@gmail.com).
+## Installation and Running 🚀
+
+1. **Dependencies**: Ensure all dependencies are installed, including ROS2, OpenCV, and Python libraries specific to vision processing and motor control.
+2. **Build Workspace**: Navigate to `/ros_workspace/` and run `colcon build` to compile the project.
+3. **Launch**: Use ROS2 launch files to start the system components. Example: `ros2 launch moveo_ros moveo_arm.launch`.
+
+## Future Work 🔮
+
+- **Machine Learning for Object Detection**: Explore integrating machine learning models for enhanced object detection and classification.
+- **Enhanced Motor Control**: Investigate more advanced algorithms for motor control to improve precision and response time.
+- **Wider Object Interaction**: Expand the system’s capabilities to interact with a broader range of object types and trajectories.
+
+## Acknowledgments 🙏
+
+Special thanks to Dr. Brian Deegan and Dr. Soumyajyoti Maji for their guidance throughout the project, and to Mr. Myles Meehan and Mr. Darragh Mullins for their assistance in sourcing parts.
