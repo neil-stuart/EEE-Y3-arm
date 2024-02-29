@@ -17,7 +17,8 @@ This project aims to develop and implement a system that integrates advanced sen
 - **Sensing and Vision**: Utilizes an Intel RealSense Camera for 3D object location and tracking.
 - **Computing Platform**: Runs on a Raspberry Pi 4, equipped to handle real-time image processing and motor control tasks.
 - **Software Stack**:
-  - **ROS2 (Robot Operating System 2)**: For orchestrating the system’s components, including motor control and sensor data integration.
+  - **ROS2 (Robot Operating System 2)**
+: For orchestrating the system’s components, including motor control and sensor data integration.
   - **OpenCV in Python**: For object detection and vision processing.
   - **Custom PID Control**: Implemented for dynamic object interaction, aiming for precision in motor responses based on sensor inputs.
 
@@ -28,7 +29,7 @@ The ROS workspace is organized to facilitate development, testing, and deploymen
 ## Installation and Running 🚀
 
 1. **Dependencies**: Ensure all dependencies are installed, including ROS2, OpenCV, and Python libraries specific to vision processing and motor control.
-2. **Build Workspace**: Navigate to `/ros_workspace/` and run `colcon build` to compile the project.
+2. **Build Workspace**: Navigate to the root of the epository and run `colcon build` to compile the project.
 3. **Launch**: Use ROS2 launch files to start the system components. Example: `ros2 launch moveo_ros moveo_arm.launch`.
 
 ## Future Work 🔮
