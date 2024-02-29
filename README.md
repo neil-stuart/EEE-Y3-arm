@@ -30,7 +30,7 @@ The ROS workspace is organized to facilitate development, testing, and deploymen
 
 1. **Dependencies**: Ensure all dependencies are installed, including ROS2, OpenCV, and Python libraries specific to vision processing and motor control.
 2. **Build Workspace**: Navigate to the root of the epository and run `colcon build` to compile the project.
-3. **Launch**: Use ROS2 launch files to start the system components. Example: `ros2 launch moveo_ros moveo_arm.launch`.
+3. **Launch**: Use ROS2 launch files to start the system components. Example: `ros2 launch arm_pkg arm_pkg:launch`.
 
 ## Future Work 🔮
 
