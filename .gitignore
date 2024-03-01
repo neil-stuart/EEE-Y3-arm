@@ -1,2 +1,4 @@
-./log
-./install
+log/
+install/
+build/
+camera_calibration_data/
