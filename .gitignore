@@ -2,3 +2,5 @@ log/
 install/
 build/
 camera_calibration_data/
+.vscode/
+__pycache__
