@@ -8,11 +8,12 @@ import numpy as np
 import ikpy.utils.plot as plot_utils
 
 my_chain = ikpy.chain.Chain.from_urdf_file("./host_serial_control/moveo.URDF")
-target_position = [ 0.1, -0.2, 0.1]
+target_position = [ 0.15, -0.2, 0.4]
 print("The angles of each joints are : ", my_chain.inverse_kinematics(target_position))
 
 
 fig, ax = plot_utils.init_3d_figure()
 my_chain.plot(my_chain.inverse_kinematics(target_position), ax, target=target_position)
-plt.xlim(-0.1, 0.1)
-plt.ylim(-0.1, 0.1)
+plt.xlim(-0.4, 0.4)
+plt.ylim(-0.4, 0.4)
+plt.show()
