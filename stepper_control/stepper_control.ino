@@ -10,23 +10,20 @@ const int STEPPERS_PINS[N_STEPPERS][3] = {
   {A0,A1,A2} // GRABBER ARTICULATION
 };
 
-const int STEPPER_PARAMS[N_STEPPERS][3] = { 
-  // Stepper parameters given as MIN_POSITION, MAX_POSITION, MAX_FREQUENCY
-  {-1000,1000,1000},
-  {-680,680,500},
-  {-1500,1500,1500},
-  {-500,500,500} // Initialize params for here 
+const int STEPPER_PARAMS[N_STEPPERS][4] = { 
+  // Stepper parameters given as MIN_POSITION, MAX_POSITION, MAX_FREQUENCY, MIN_F
+  {-1000,1000,1000,500},
+  {-680*4,4*680,3000,500},
+  {-1800,1800,1500,450},
+  {-500,500,500,50} // Initialize params for here 
 };
 
 // Each steppers status given as 
 // {position, speed (in Hz), direction (1,-1), enabled/disabled, n_steps}
-int stepper_status[N_STEPPERS][5] = {
-  {0,0,1,0,0},
-  {0,0,1,0,0},
-  {0,0,1,0,0},
-  {0,0,1,0,0}
-};
+int stepperStatus[N_STEPPERS][5] = {0};
 
+// Use this to know the progress i.e. how many steps have been completed out of the last total as a percentage?
+int nStepsLast[N_STEPPERS] = {0};
 void setup() {
   
   Serial.begin(115200);
@@ -46,35 +43,33 @@ void loop() {
 }
 
 unsigned long lastStepTime[N_STEPPERS] = {0}; // Initialize all to 0
-bool pulseState[N_STEPPERS] = {false}; // Track if the pulse is HIGH or LOW for each stepper
 unsigned long stepIntervals[N_STEPPERS] = {0}; // Initialize all to 0
 
 void updateSteppers() {
   for(int i = 0; i < N_STEPPERS; i++) {
     unsigned long currentMicros = micros();
     
-    int next_pos = stepper_status[i][0] + stepper_status[i][2];
+    int next_pos = stepperStatus[i][0] + stepperStatus[i][2];
 
     if(next_pos > STEPPER_PARAMS[i][0] && next_pos < STEPPER_PARAMS[i][1]){
-      // Check if it's time to toggle the step pin
-      if (!pulseState[i] && stepper_status[i][4] > 0 && currentMicros - lastStepTime[i] >= stepIntervals[i]) {
-        
-        // Start pulse
-        digitalWrite(STEPPERS_PINS[i][0], HIGH);
-        pulseState[i] = true; // Mark pulse as HIGH
-        
-        lastStepTime[i] = currentMicros; // Update the last step time to the start of the pulse
-        stepper_status[i][4]--;
+        // Check if it's time to toggle the step pin
+        if (stepperStatus[i][4] > 0 && currentMicros - lastStepTime[i] >= stepIntervals[i]) {
+          
+            // Start pulse
+            digitalWrite(STEPPERS_PINS[i][0], HIGH);
+            delayMicroseconds(PULSE_WIDTH); // Use blocking delay for the pulse width
+            digitalWrite(STEPPERS_PINS[i][0], LOW);
 
-      } else if (pulseState[i] && currentMicros - lastStepTime[i] >= PULSE_WIDTH) { // Ensure pulse width of 10 microseconds
-        
-        // End pulse
-        digitalWrite(STEPPERS_PINS[i][0], LOW);
-        pulseState[i] = false; 
+            lastStepTime[i] = currentMicros; // Update the last step time to the end of the pulse
+            stepperStatus[i][4]--;
 
-        stepper_status[i][0] += stepper_status[i][2];
-      }
+            // Update with ease in out speed
+            stepperStatus[i][0] += stepperStatus[i][2];
+            float progress = ((float)stepperStatus[i][4])/((float)nStepsLast[i]);
+            stepIntervals[i] = 1000000L/(getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3]);
+        } 
     }
+
     digitalWrite(STEPPERS_PINS[i][0], LOW);
   }
 }
@@ -92,6 +87,13 @@ void serialEvent() {
       receivedCommand += inChar; // Accumulate characters into the command string
     }
   }
+}
+
+float getEaseInOutSpeed(float x){
+        if(x > 0.0f && x < 1.0f){
+            return (-4.0f * x * x + 4.0f *x);
+        }
+        return 0;
 }
 
 void processCommand(String command) {
@@ -112,31 +114,31 @@ void processCommand(String command) {
     case 'E': // Enable/disable stepper
       value = command.substring(firstCommaIndex + 1).toInt();
       digitalWrite(STEPPERS_PINS[stepperID][2],  value==0?HIGH:LOW);
-      stepper_status[stepperID][3] = value;
+      stepperStatus[stepperID][3] = value;
       return;
     case 'F': // Change frequency of the stepper.
       value = command.substring(firstCommaIndex + 1).toInt();
-      stepper_status[stepperID][1] = (value<=STEPPER_PARAMS[stepperID][2])?value:STEPPER_PARAMS[stepperID][2];
+      stepperStatus[stepperID][1] = (value<=STEPPER_PARAMS[stepperID][2])?value:STEPPER_PARAMS[stepperID][2];
       stepIntervals[stepperID] = 1000000L / value;
       return;
     case 'D': // Change direction of the stepper.
       value = command.substring(firstCommaIndex + 1).toInt();
-      stepper_status[stepperID][2] = (value==0)?1:-1;
+      stepperStatus[stepperID][2] = (value==0)?1:-1;
       digitalWrite(STEPPERS_PINS[stepperID][1], value);
       return;
     case 'N':
       value = command.substring(firstCommaIndex + 1).toInt();
-      stepper_status[stepperID][4] = value;
+      nStepsLast[stepperID] = value;
+      stepperStatus[stepperID][4] = value;
       return;
     case 'P': // Request position of stepper.
-      int position = stepper_status[stepperID][0];
+      int position = stepperStatus[stepperID][0];
       Serial.print("P");
       Serial.print(stepperID);
       Serial.print(",");
       Serial.println(position);
       return;
   }
-
   Serial.println("NC"); // No command
 }
 
@@ -144,7 +146,7 @@ void enableAllSteppers()
 {
   for(int i = 0 ; i< N_STEPPERS; i++){
     digitalWrite(STEPPERS_PINS[i][2], LOW);
-    stepper_status[i][3] = true;
+    stepperStatus[i][3] = true;
   }
 }
 
@@ -152,6 +154,6 @@ void disableAllSteppers()
 {
   for(int i = 0 ; i< N_STEPPERS; i++){
     digitalWrite(STEPPERS_PINS[i][2], HIGH);
-    stepper_status[i][3] = false;
+    stepperStatus[i][3] = false;
   }
 }
