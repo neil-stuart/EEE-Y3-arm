@@ -4,3 +4,4 @@ build/
 camera_calibration_data/
 .vscode/
 __pycache__
+*/*.egg-info/*
