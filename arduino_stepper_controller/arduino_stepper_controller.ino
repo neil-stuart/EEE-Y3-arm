@@ -1,3 +1,13 @@
+/*
+Author: Neil Stuart
+Group: 11
+Email: b.stuart3@universityofgalway.ie
+Date: March 2024
+
+Project: Arduino Controller for Moveo Robotic Arm
+University of Galway
+*/
+
 const int N_STEPPERS = 4;
 
 const int PULSE_WIDTH = 10; //us
