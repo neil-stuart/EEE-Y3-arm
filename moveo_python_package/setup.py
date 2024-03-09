@@ -6,6 +6,9 @@ setup(
     packages=find_packages(),
     install_requires=[
         'pyserial',
+        'scipy',
+        'numpy',
+        'matplotlib'
     ],
     author='Neil Stuart',
     author_email='n.stuart3@universityofgalway.ie',

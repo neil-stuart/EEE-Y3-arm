@@ -1,8 +1,7 @@
 import serial
 import time
 import math
-from g11_moveo import BCN3D_Moveo
-
+from g11_moveo import BCN3D_Moveo, Moveo_IK
 
 def test_motors():
     pi = math.pi
