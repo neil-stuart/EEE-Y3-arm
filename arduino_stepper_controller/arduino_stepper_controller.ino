@@ -22,10 +22,10 @@ const int STEPPERS_PINS[N_STEPPERS][3] = {
 
 const int STEPPER_PARAMS[N_STEPPERS][4] = { 
   // Stepper parameters given as MIN_POSITION, MAX_POSITION, MAX_FREQUENCY, MIN_F
-  {-1000,1000,1000,500},
+  {-1000,1000,1000,200},
   {-680*4,4*680,3000,500},
-  {-1800,1800,1500,450},
-  {-500,500,500,50} // Initialize params for here 
+  {-1800,1800,1500,950},
+  {-500,500,1000,200} // Initialize params for here 
 };
 
 // Each steppers status given as 
@@ -76,7 +76,7 @@ void updateSteppers() {
             // Update with ease in out speed
             stepperStatus[i][0] += stepperStatus[i][2];
             float progress = ((float)stepperStatus[i][4])/((float)nStepsLast[i]);
-            stepIntervals[i] = 1000000L/(getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3]);
+            stepIntervals[i] = 1000000L/((getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3])*((float) (nStepsLast[i]/STEPPER_PARAMS[i][2])>0.3f?1:0.5f));
         } 
     }
 
@@ -101,7 +101,7 @@ void serialEvent() {
 
 float getEaseInOutSpeed(float x){
         if(x > 0.0f && x < 1.0f){
-            return (-4.0f * x * x + 4.0f *x);
+          return (-4.0f * x * x + 4.0f *x);
         }
         return 0;
 }
