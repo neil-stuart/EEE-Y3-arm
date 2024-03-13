@@ -29,11 +29,12 @@ const int STEPPER_PARAMS[N_STEPPERS][4] = {
 };
 
 // Each steppers status given as 
-// {position, speed (in Hz), direction (1,-1), enabled/disabled, n_steps}
+// {position, speed (in Hz), direction (1,-1), enabled/disabled, n_steps_left}
 int stepperStatus[N_STEPPERS][5] = {0};
 
 // Use this to know the progress i.e. how many steps have been completed out of the last total as a percentage?
 int nStepsLast[N_STEPPERS] = {0};
+
 void setup() {
   
   Serial.begin(115200);
@@ -46,6 +47,7 @@ void setup() {
   disableAllSteppers();
   delay(100);
   enableAllSteppers();
+  
 }
 
 void loop() {
@@ -62,21 +64,22 @@ void updateSteppers() {
     int next_pos = stepperStatus[i][0] + stepperStatus[i][2];
 
     if(next_pos > STEPPER_PARAMS[i][0] && next_pos < STEPPER_PARAMS[i][1]){
-        // Check if it's time to toggle the step pin
         if (stepperStatus[i][4] > 0 && currentMicros - lastStepTime[i] >= stepIntervals[i]) {
           
-            // Start pulse
+            lastStepTime[i] = micros(); // Update the last step time
             digitalWrite(STEPPERS_PINS[i][0], HIGH);
-            delayMicroseconds(PULSE_WIDTH); // Use blocking delay for the pulse width
+
+            delayMicroseconds(PULSE_WIDTH); // Use blocking delay for the pulse width,to guaratee pulse.
             digitalWrite(STEPPERS_PINS[i][0], LOW);
 
-            lastStepTime[i] = currentMicros; // Update the last step time to the end of the pulse
-            stepperStatus[i][4]--;
+            stepperStatus[i][4]--; // Decrease steps remaining by 1.
+            stepperStatus[i][0] += stepperStatus[i][2]; // Update position status.
 
-            // Update with ease in out speed
-            stepperStatus[i][0] += stepperStatus[i][2];
+            // Progress represents the percent completion from the last move request.
+            // Using steps as the metric (steps_completed/steps_to_complete).
             float progress = ((float)stepperStatus[i][4])/((float)nStepsLast[i]);
-            stepIntervals[i] = 1000000L/((getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3])*((float) (nStepsLast[i]/STEPPER_PARAMS[i][2])>0.3f?1:0.5f));
+
+            stepIntervals[i] = 1000000L/((getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3])*((float) (nStepsLast[i]/STEPPER_PARAMS[i][2])>0.35f?1.0f:0.35f));
         } 
     }
 
