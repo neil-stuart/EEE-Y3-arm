@@ -15,7 +15,7 @@ class BCN3D_Moveo:
     This class provides an interface to control the BCN3D Moveo robotic arm via serial communication.
     """
 
-    STEPS_PER_REV = [2*200, 8*200, 1*(360/0.35), 200]  # Steps per revolution for each motor. TODO: Account for microstepping.
+    STEPS_PER_REV = [2*200, 8*200, 1*(360/0.35), 2*200]  # Steps per revolution for each motor. TODO: Account for microstepping.
     GEAR_RATIOS = [10, 5, 4, 2]  # Gear ratio for each motor (input_angle/output_angle).
     
     def __init__(self, port):
@@ -108,7 +108,6 @@ class BCN3D_Moveo:
         desired_positions_radians = [m0, m1, m2, m3]
         desired_positions_steps = [self.__radians_to_steps(i, rad) for i, rad in enumerate(desired_positions_radians)]
         
-        print(desired_positions_steps)
         
         # Get current positions in steps
         current_positions = [self.request_position(i) for i in range(4)]
