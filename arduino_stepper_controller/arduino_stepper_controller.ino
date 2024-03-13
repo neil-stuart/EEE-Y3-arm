@@ -129,17 +129,12 @@ void processCommand(String command) {
       digitalWrite(STEPPERS_PINS[stepperID][2],  value==0?HIGH:LOW);
       stepperStatus[stepperID][3] = value;
       return;
-    case 'F': // Change frequency of the stepper.
-      value = command.substring(firstCommaIndex + 1).toInt();
-      stepperStatus[stepperID][1] = (value<=STEPPER_PARAMS[stepperID][2])?value:STEPPER_PARAMS[stepperID][2];
-      stepIntervals[stepperID] = 1000000L / value;
-      return;
     case 'D': // Change direction of the stepper.
       value = command.substring(firstCommaIndex + 1).toInt();
       stepperStatus[stepperID][2] = (value==0)?1:-1;
       digitalWrite(STEPPERS_PINS[stepperID][1], value);
       return;
-    case 'N':
+    case 'N': // Move the stepper n steps.
       value = command.substring(firstCommaIndex + 1).toInt();
       nStepsLast[stepperID] = value;
       stepperStatus[stepperID][4] = value;
