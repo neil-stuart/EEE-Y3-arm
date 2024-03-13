@@ -151,6 +151,21 @@ void processCommand(String command) {
       Serial.print(",");
       Serial.println(position);
       return;
+    case 'I': // Print information about the stepper in CSV format
+      // Print the header
+      Serial.println("StepperID,Position,Speed,Direction,Enabled");
+      
+      // Print the data in CSV format
+      Serial.print(stepperID);
+      Serial.print(",");
+      Serial.print(stepperStatus[stepperID][0]); // Position
+      Serial.print(",");
+      Serial.print(stepperStatus[stepperID][1]); // Speed
+      Serial.print(",");
+      Serial.print(stepperStatus[stepperID][2] > 0 ? "CW" : "CCW"); // Direction
+      Serial.print(",");
+      Serial.println(stepperStatus[stepperID][3] ? "Yes" : "No"); // Enabled
+      return;
   }
   Serial.println("NC"); // No command
 }
