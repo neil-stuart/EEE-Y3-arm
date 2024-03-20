@@ -2,10 +2,8 @@ import rclpy
 from rclpy.node import Node
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
-
-# from sensor_msgs.msg import CompressedImage
-
 from std_msgs.msg import Float32MultiArray
+from realsense2_camera_msgs.msg import RGBD 
 import cv2
 import time 
 from cv_bridge import CvBridgeError
@@ -15,12 +13,12 @@ class ImageProcessor(Node):
     def __init__(self):
         super().__init__('image_processor')
         self.subscription = self.create_subscription(
-            Image,
-            'image',
+            RGBD,
+            'MOVEO/RS_CAM/aligned_depth_to_color/image_raw',
             self.image_callback,
             100)
         
-        self.publisher_ = self.create_publisher(Float32MultiArray, 'xys', 10)
+        self.publisher_ = self.create_publisher(Float32MultiArray, 'xyz', 10)
         self.frame_count = 0
         self.fps_start_time = time.time()
         self.bridge = CvBridge()
