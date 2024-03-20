@@ -2,20 +2,20 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from std_msgs.msg import Float32MultiArray
+from g11_moveo import BCN3D_Moveo, Moveo_IK
 
 class HardwareInterface(Node):
     def __init__(self):
-        super().__init__('cotnrols_generator')
+        super().__init__('controls_generator')
+        self.arm = BCN3D_Moveo("")
+        self.ik = Moveo_IK()
         self.subscription = self.create_subscription(
             Float32MultiArray,
             'control',
-            self.actuate_motors,
+            self.update,
             10)
 
-    def actuate_motors(self, msg):
-        pass
-
-    def find_nsteps_foreach_motor(self, angles):
+    def update(self, msg):
         pass
 
 def main(args=None):
