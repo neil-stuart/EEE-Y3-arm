@@ -91,7 +91,7 @@ class Moveo_IK():
         - The angles of the three joints (theta1, theta2, theta3) as a solution to the inverse kinematics problem.
         """
         initial_guess = [np.pi/2, 0, 0]
-        result = minimize(self.__objective, initial_guess, args=(a, b, l1, l2, l3), bounds=[(0, np.pi),(-np.pi/2, np.pi/2),(-np.pi/2, np.pi/2)])
+        result = minimize(self.__objective, initial_guess, args=(a, b, l1, l2, l3), bounds=[(0, np.pi),(-0.7*np.pi, 0.7*np.pi),(-0.7*np.pi, 0.7*np.pi)])
         theta1, theta2, theta3 = result.x
         return theta1-np.pi/2, theta2, theta3
 
