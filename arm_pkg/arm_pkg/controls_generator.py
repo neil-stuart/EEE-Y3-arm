@@ -3,7 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 import numpy as np
 import pandas as pd
-from g11_moveo import Moveo_IK, BCN3D_Moveo
+from g11_moveo import Moveo_IK, BCN3D_Moveo, TransformPoint
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
@@ -62,7 +62,7 @@ class ControlsGenerator(Node):
         
         self.arm = BCN3D_Moveo("/dev/USB0")
         self.ik = Moveo_IK()
-
+        self.transform = TransformPoint()
         self.model = PredictionModel()
 
         self.publisher_ = self.create_publisher(Float32MultiArray, 'control', 10)

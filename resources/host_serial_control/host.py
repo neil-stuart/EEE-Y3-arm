@@ -39,6 +39,5 @@ z_scale = Scale(root, from_=-0.25, to=1.0, resolution=0.01, orient=HORIZONTAL, l
 #z_scale.set(0.1)  # Default value
 z_scale.pack(fill='x')  # And Z
 
-angles = ik.point_to_angles(0.25,0.25,0.25)
-arm.go_to(*angles)
+
 root.mainloop()
