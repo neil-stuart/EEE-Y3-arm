@@ -1,104 +1,88 @@
 import rclpy
 from rclpy.node import Node
-from cv_bridge import CvBridge
-from sensor_msgs.msg import Image
 from std_msgs.msg import Float32MultiArray
-from realsense2_camera_msgs.msg import RGBD 
 import cv2
-import time 
-from cv_bridge import CvBridgeError
 import numpy as np
+import pyrealsense2 as rs
 
 class ImageProcessor(Node):
     def __init__(self):
         super().__init__('image_processor')
-        self.subscription = self.create_subscription(
-            RGBD,
-            'MOVEO/RS_CAM/aligned_depth_to_color/image_raw',
-            self.image_callback,
-            100)
-        
-        self.publisher_ = self.create_publisher(Float32MultiArray, 'xyz', 10)
-        self.frame_count = 0
-        self.fps_start_time = time.time()
-        self.bridge = CvBridge()
-        
-    def image_callback(self, msg):
-        self.frame_count += 1
-        current_time = time.time()
-        elapsed_time = current_time - self.fps_start_time
+        self.publisher_ = self.create_publisher(Float32MultiArray, 'xyz_coordinates', 10)
+        self.fps = 60  # Adjust according to your needs
+        # Initialize RealSense pipeline
+        self.pipeline = rs.pipeline()
+        self.config = rs.config()
+        # Configure the streams
+        self.config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, self.fps)
+        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, self.fps)
+        # Start the pipeline
+        self.pipeline.start(self.config)
 
 
+        self.create_timer(1.0 / self.fps, self.publish_frame)
 
-        try:
-            cv_img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-        except CvBridgeError as exc:
-            print("Error converting image")
+        self.add_on_set_parameters_callback(self.cleanup)
+    def get_ball_xy(self, color_image):
+        # Color threshold to find the ball
+        hsv_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
+        lower_color = np.array([23, 100, 100])
+        upper_color = np.array([47, 255, 255])
+        mask = cv2.inRange(hsv_image, lower_color, upper_color)
 
-        xys = get_ball_xys(cv_img)
-        
-        # Process image and publish xys location
-        self.publisher_.publish(xys)
+        # Find contours
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if contours:
+            # Find the largest contour
+            largest_contour = max(contours, key=cv2.contourArea)
+            ((x, y), radius) = cv2.minEnclosingCircle(largest_contour)
+            if radius > 10:  # Minimum size to consider
+                return int(x), int(y)
+        return None, None
 
-        if self.frame_count == 30:  
-            fps = self.frame_count / elapsed_time
+    def publish_frame(self):
+        frames = self.pipeline.wait_for_frames()
 
-            self.get_logger().info('=================Recent State==================')
-            self.get_logger().info(f'{fps:.1f} FPS')
-            self.fps_start_time = current_time
-            self.frame_count = 0
-            self.get_logger().info('X Y S : ' + ' '.join(str(round(i,2)) for i in xys.data))
+        depth_frame = frames.get_depth_frame()
+        color_frame = frames.get_color_frame()
 
-def get_ball_xys(cv_img):
-    a = Float32MultiArray()
-    img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2HSV)
+        if not depth_frame or not color_frame:
+            return
 
-    lower = np.array([0, 0, 0], np.uint8)
-    upper = np.array([180, 255, 200], np.uint8)
+        # # Convert images to numpy arrays
+        # depth_image = np.asanyarray(depth_frame.get_data())
+        color_image = np.asanyarray(color_frame.get_data())
 
-    binary_img = cv2.inRange(img,lower,upper)
-    contours, hierarchy = cv2.findContours(binary_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # Get the ball position in pixel coordinates
+        x, y = self.get_ball_xy(color_image)
 
-    # cv2.imshow('Binarized',binary_img)
-    # cv2.waitKey(1)
-    
-    # Denoise
+        if x is not None and y is not None:
 
-    a.data = track(cv2.cvtColor(img, cv2.COLOR_HSV2BGR),contours)
-    return a
+            depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
+            depth = depth_frame.get_distance(x, y)
+            try:
+                xyz = rs.rs2_deproject_pixel_to_point(depth_intrin, [x, y], depth)
 
-def track(cv_img, contours):
-    for c in contours:
-      area = cv2.contourArea(c)
-      ((x,y), radius) = cv2.minEnclosingCircle(c)
-      if (area > 5000):
-        cv2.drawContours(cv_img, [c], -1, (255,0,255), 2)
-        cx, cy = find_contour_center(c)
-        cv2.circle(cv_img, (cx,cy), (int)(radius), (0,255,255), 3)
-        cv2.circle(cv_img, (cx,cy), 5, (150,0,255), -1)
-
-    cv2.imshow("Tracking", cv_img)
-    cv2.waitKey(3)
-
-    return [radius,cx,cy]
-
-def find_contour_center(contour):
-    M = cv2.moments(contour)
-    cx = -1
-    cy = -1
-    if (M['m00'] != 0):
-      cx = int(M['m10']/M['m00'])
-      cy = int(M['m01']/M['m00'])
-    return cx, cy
+                # Publish XYZ coordinates
+                msg = Float32MultiArray()
+                msg.data = xyz
+                self.get_logger().info(f"x:{xyz[0]:.2f},y:{xyz[1]:.2f},z:{xyz[2]:.2f}")
+                self.publisher_.publish(msg)
+            except:
+                self.get_logger().info("Point not within depth FOV.")
+        else:
+            self.get_logger().info('Object not found')
+            
+    def cleanup(self):
+        # Method to stop the RealSense pipeline
+        self.get_logger().info('Shutting down: Stopping the RealSense pipeline.')
+        self.pipeline.stop()
 
 def main(args=None):
     rclpy.init(args=args)
-
-    image_processor = ImageProcessor()
-
-    rclpy.spin(image_processor)
-
-    image_processor.destroy_node()
+    image_processor_node = ImageProcessor()
+    rclpy.spin(image_processor_node)
+    image_processor_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':

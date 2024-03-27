@@ -3,7 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 import numpy as np
 import pandas as pd
-
+from g11_moveo import Moveo_IK, BCN3D_Moveo
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
@@ -54,56 +54,44 @@ class ControlsGenerator(Node):
     def __init__(self):
         super().__init__('controls_generator')
 
-        # current_time = self.get_clock().now()
-        
         self.subscription = self.create_subscription(
             Float32MultiArray,
-            'xys',
+            'xyz',
             self.calculate_controls,
             10)
         
-
+        self.arm = BCN3D_Moveo("/dev/USB0")
+        self.ik = Moveo_IK()
 
         self.model = PredictionModel()
 
         self.publisher_ = self.create_publisher(Float32MultiArray, 'control', 10)
-        self.i = 0
+
 
     def calculate_controls(self, msg):
         xyz = msg.data
-        self.i += 1
 
         # Use the xy position and s 'scale' like z distance to determine direction arm needs to move 
         # Publish to control topic
         xyz.insert(0, self.get_clock().now().nanoseconds)
+
         txyz = xyz
+
         self.model.add_data(txyz)
 
-        # Predict future xys values at timedelta.
-        self.model.predict_future_vals()
+        # Predict future xyz values at timedelta.
+        target_point = self.model.predict_future_vals()
 
         # If predicted values fall within a range the arm can reach. 
 
 
         # Then find motor angles for that mid-point. 
+        motor_angles = self.ik.point_to_angles(target_point)
 
-
-        # Define parameters
-        controls = Float32MultiArray()
-        controls.data = [0.0,0.0,0.0,0.0,0.0,0.0] #Lets say 5 motors, giving angles between 0 and mazx angle
-        
-        
-        
-        self.publisher_.publish(controls)
-        
-        if self.i == 30:
-            self.get_logger().info("Current Desired Position: " + ' '.join(str(round(i,2)) for i in controls.data))
-            self.i = 0
-        
+        self.arm.go_to(motor_angles)
 
 def main(args=None):
     rclpy.init(args=args)
-
     controls_generator = ControlsGenerator()
 
     rclpy.spin(controls_generator)

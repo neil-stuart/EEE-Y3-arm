@@ -137,6 +137,7 @@ def main(pipeline, profile):
             try:
                 color_point_3d = rs.rs2_deproject_pixel_to_point(depth_intrin, [int(x),int(y)], depth_frame.get_distance(int(x),int(y)))
                 pts.append(color_point_3d)
+                print(color_point_3d)
                 pts = pts[-50:]
                             #[print(round(color_point_3d[i],2),","," ") for i in range(3)]
                 #print("\n")
@@ -168,6 +169,7 @@ def main(pipeline, profile):
 
 def write_csv_points(pts):
     # Convert each element of point to a string
+
     points_str = [[str(element) for element in point] for point in pts]
     
     with open(filename, 'a') as f:

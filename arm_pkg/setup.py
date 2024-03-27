@@ -24,10 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'camera_interface = arm_pkg.camera_interface:main',
             'image_processor = arm_pkg.image_processor:main',
-            'controls_generator = arm_pkg.controls_generator:main',
-            'hardware_interface = arm_pkg.hardware_interface:main'
+            'controls_generator = arm_pkg.controls_generator:main'
         ],
     },
 )

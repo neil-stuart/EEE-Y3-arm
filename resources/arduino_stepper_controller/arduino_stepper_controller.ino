@@ -22,9 +22,9 @@ const int STEPPERS_PINS[N_STEPPERS][3] = {
 
 const int STEPPER_PARAMS[N_STEPPERS][4] = { 
   // Stepper parameters given as MIN_POSITION, MAX_POSITION, MAX_FREQUENCY, MIN_F
-  {-1000,1000,1000,200},
+  {-1000,1000,1500,400},
   {-680*4,4*680,3000,500},
-  {-1800,1800,1500,950},
+  {-1800,1800,4000,450},
   {-500,500,1000,200} // Initialize params for here 
 };
 
@@ -79,7 +79,7 @@ void updateSteppers() {
             // Using steps as the metric (steps_completed/steps_to_complete).
             float progress = ((float)stepperStatus[i][4])/((float)nStepsLast[i]);
 
-            stepIntervals[i] = 1000000L/((getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3])*((float) (nStepsLast[i]/STEPPER_PARAMS[i][2])>0.35f?1.0f:0.35f));
+            stepIntervals[i] = 1000000L/((getEaseInOutSpeed(progress)*(STEPPER_PARAMS[i][2]-STEPPER_PARAMS[i][3])+STEPPER_PARAMS[i][3])*((float) (nStepsLast[i]/STEPPER_PARAMS[i][2])>0.2f?1.0f:0.35f));
         } 
     }
 
