@@ -13,18 +13,20 @@ import math
 class BCN3D_Moveo:
     """
     This class provides an interface to control the BCN3D Moveo robotic arm via serial communication.
+    v1 = stepper_ctrlv1.ino, v2 = stepper_ctrlv2.ino
     """
 
     STEPS_PER_REV = [2*200, 8*200, 1*(360/0.35), 2*200]  # Steps per revolution for each motor. TODO: Account for microstepping.
     GEAR_RATIOS = [10, 5, 4, 2]  # Gear ratio for each motor (input_angle/output_angle).
     
-    def __init__(self, port):
+    def __init__(self, port, v2=True):
         """
         Initializes the BCN3D_Moveo object by setting up the serial connection.
         
         Args:
             port (str): The serial port to connect to.
         """
+        self.v2 = v2
         self.nano = serial.Serial(port, 115200, timeout=1)
 
     def __set_direction(self, motor_id, direction):
@@ -47,6 +49,7 @@ class BCN3D_Moveo:
             on_off (int): Enable (1) or disable (0) the motor.
         """
         command = f"E{motor_id},{on_off};"
+
         self.nano.write(command.encode())
 
     def request_position(self, motor_id):
@@ -83,6 +86,10 @@ class BCN3D_Moveo:
         command = f"N{motor_id},{n_steps};"
         self.nano.write(command.encode())
 
+    def __change_setpoint(self,motor_id,setpoint):
+        command = f"S{motor_id},{setpoint};"
+        self.nano.write(command.encode())
+
     def __radians_to_steps(self, motor_id, radians):
         """
         Converts radians to steps for a given motor.
@@ -108,16 +115,21 @@ class BCN3D_Moveo:
         desired_positions_radians = [m0, m1, m2, m3]
         desired_positions_steps = [self.__radians_to_steps(i, rad) for i, rad in enumerate(desired_positions_radians)]
         
-        
-        # Get current positions in steps
-        current_positions = [self.request_position(i) for i in range(4)]
+        if self.v2:
+            for id,setpoint in zip(range(4),desired_positions_steps):
+                self.__change_setpoint(id,setpoint)
+        else:
+            # Get current positions in steps
+            current_positions = [self.request_position(i) for i in range(4)]
 
-        # Calculate the difference in steps
-        offsets = [current_position - desired for current_position, desired in zip(current_positions, desired_positions_steps)]
+            # Calculate the difference in steps
+            offsets = [current_position - desired for current_position, desired in zip(current_positions, desired_positions_steps)]
 
-        # Determine direction for each motor
-        directions = [1 if offset >= 0 else 0 for offset in offsets]
-        
-        # Move each motor by the calculated offset in the determined direction
-        for id, offset, direction in zip(range(4), offsets, directions):
-            self.__move_n_steps(id, abs(offset), direction)
+            # Determine direction for each motor
+            directions = [1 if offset >= 0 else 0 for offset in offsets]
+            
+            # Move each motor by the calculated offset in the determined direction
+            for id, offset, direction in zip(range(4), offsets, directions):
+                self.__move_n_steps(id, abs(offset), direction)
+
+
