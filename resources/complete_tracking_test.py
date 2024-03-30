@@ -12,7 +12,7 @@ if __name__ == "__main__":
     ik = Moveo_IK()
     time.sleep(3)
     
-    moving_avg_pts = []
+    moving_avg_pts = np.zeros((WINDOW_SIZE,3))
 
     try:
         while(True):
@@ -27,8 +27,8 @@ if __name__ == "__main__":
                 
                 mov_avg = np.mean(moving_avg_pts, axis=0)
 
-                if(abs(np.linalg.norm(arm_point - mov_avg))>0.1):
-                    pass # Do nothing if the point is an outlier - far from current average.
+                if(abs(np.linalg.norm(arm_point - mov_avg))>0.3):
+                    continue # Do nothing if the point is an outlier - far from current average.
                 else:
                     arm_target = mov_avg
 
