@@ -6,42 +6,32 @@ import time
 
 arm_pos = [0,0,0]
 tracked_pos = []
-
-tracker = RS2_Ball_Tracking()
+i = 0
+tracker = RS2_Ball_Tracking(display=True)
 time.sleep(3)
 
 def save_point():
-    global profile
     global arm_pos
     global tracked_pos
 
-   
+    global i 
+
     xyz = tracker.get_xyz()
     if(xyz):
         tracked_pos = xyz
-        x,y,z = xyz
+        x,z,y = xyz
+        y = -y
         with open("./resources/calibrate/points.csv",'a') as f:
             f.write(f"\n{x},{y},{z},{arm_pos[0]},{arm_pos[1]},{arm_pos[2]}")
             print("Points appended to points.csv!")
+
+        on_button_click()
 
 
 
     else:
         print('(Tracking) SAVE FAILED: Object not found!')
 
-def get_ball_xy(color_image):
-    hsv_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
-    lower_color = np.array([23, 100, 100])
-    upper_color = np.array([47, 255, 255])
-    mask = cv2.inRange(hsv_image, lower_color, upper_color)
-
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if contours:
-        largest_contour = max(contours, key=cv2.contourArea)
-        ((x, y), radius) = cv2.minEnclosingCircle(largest_contour)
-        if radius > 10:  
-            return int(x), int(y)
-    return None, None
 
 def run_arm_movement(x, y, z, arm):
     try:
@@ -58,15 +48,15 @@ def display_positions():
 
 def on_button_click():
     global arm_pos
-    global tracked_pos
+    global i
+    global arm_points
 
     # Get the values from text fields
-    x = float(text_field_x.get())
-    y = float(text_field_y.get())
-    z = float(text_field_z.get())
+    x,y,z = arm_points[i]
 
     arm_pos = [x, y, z]
-    tracked_pos = [0, 0, 0]  # Reset tracked position
+
+    i += 1
 
     run_arm_movement(x, y, z, arm)
 
@@ -75,7 +65,9 @@ def on_button_click():
 if __name__ == "__main__":
 
     arm = BCN3D_Moveo("/dev/ttyUSB0")
-
+    
+    arm_points = [[0.25,0,0.0],[0.25,0.25,0.0],[0.25,0,0.10],[0.25,0.25,0.10],[0.3,0.1,0.25],[0.3,-0.1,0.35],[0.1,0.3,0],[0.1,0.3,0.18],[0.1,0.3,0.2],[0.1,0.3,0.25]]
+    
     # Create GUI
     import tkinter as tk
 
