@@ -3,9 +3,9 @@ import numpy as np
 import cv2
 import threading
 import sys
-
+import cv2
 class RS2_Ball_Tracking():
-    def __init__(self, lower_hsv=[23, 100, 100], upper_hsv=[47, 255, 255], fps=60, width=848, height=480):
+    def __init__(self, lower_hsv=[23, 100, 100], upper_hsv=[47, 255, 255], fps=60, width=848, height=480, display = False):
     
         # Initialize the RealSense pipeline
         self.lower_hsv = np.array(lower_hsv)
@@ -19,7 +19,7 @@ class RS2_Ball_Tracking():
 
         self.config.enable_stream(rs.stream.depth, self.width, self.height, rs.format.z16, self.fps)
         self.config.enable_stream(rs.stream.color,self.width, self.height, rs.format.bgr8,self.fps)
-        
+        self.display = display
         self.depth_min = 0.12 #meter
         self.depth_max = 2.5 #meter
         
@@ -38,8 +38,11 @@ class RS2_Ball_Tracking():
         return None
     
     def stop(self):
-        self.pipeline.stop()
+
         self.running = False
+
+        self.pipeline.stop()
+        cv2.destroyAllWindows()
 
     def __get_ball_xyz(self):
         while self.running:
@@ -57,9 +60,14 @@ class RS2_Ball_Tracking():
             color_frame = frames.get_color_frame()
 
             color_image = np.asanyarray(color_frame.get_data())
+            
+            if(self.display):
 
+                cv2.imshow("Tracking",color_image)
             # Colour threshold the ball and return x, y pixel coordinates
             xy = self.__get_xy(color_image)
+
+            
             if xy:
                 x, y = xy
                 # Convert from color to depth pixel coordinate
@@ -84,14 +92,18 @@ class RS2_Ball_Tracking():
         # Color threshold to find the ball
         hsv_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv_image, self.lower_hsv, self.upper_hsv)
-    
-        # Find contours
+                # Find contours
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
         if contours:
             # Find the largest contour
             largest_contour = max(contours, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(largest_contour)
+            if self.display:
+                image_with_contours = color_image.copy()  # Make a copy to avoid altering the original image
+                cv2.drawContours(image_with_contours, largest_contour, -1, (0, 255, 0), 2)
+                cv2.imshow("Tracking", image_with_contours)
+                cv2.waitKey(1)  # Wait for 1 millisecond
             if radius > 10:  # Minimum size to consider
                 return int(x), int(y)
                 
