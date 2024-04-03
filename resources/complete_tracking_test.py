@@ -49,6 +49,8 @@ if __name__ == "__main__":
     arm_target = np.array([0,0,0])
 
     time.sleep(3)
+    
+    moving_avg_pts = np.zeros((WINDOW_SIZE,3))
 
     try:
         while(True):
@@ -68,7 +70,7 @@ if __name__ == "__main__":
                 mov_avg = np.mean(moving_avg_pts, axis=0)
 
                 if(abs(np.linalg.norm(arm_point - mov_avg))>0.3):
-                    pass # Do nothing if the point is an outlier - far from current average.
+                    continue # Do nothing if the point is an outlier - far from current average.
                 else:
                     arm_target = mov_avg
 
