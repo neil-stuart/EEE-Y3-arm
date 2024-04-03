@@ -29,7 +29,7 @@ double setpoint[N_STEPPERS];
 // Define PID objects
 PID* pidControllers[N_STEPPERS];
 double Kp[N_STEPPERS] = {3, 2, 3, 3}; // Example PID parameters for each controller
-double Ki[N_STEPPERS] = {0.1, 0.1, 0.1, 0.1};
+double Ki[N_STEPPERS] = {0, 0, 0, 0};
 double Kd[N_STEPPERS] = {0.1, 0.1, 0.1, 0.1};
 
 void setup() {
@@ -63,12 +63,10 @@ void updateSteppers() {
     unsigned long currentMicros = micros();
   
 
-    if(abs(output[i]) < STEPPER_PARAMS[i][2]){
-      stepIntervals[i] = 1000000L / STEPPER_PARAMS[i][2]; // Min speed
-    }else{
-      stepIntervals[i] = 1000000L / abs(output[i]);
+    stepIntervals[i] = 1000000L / abs(output[i]);
+    if(abs(output[i])<40){
+      continue;
     }
-
     if (currentMicros - lastStepTime[i] >= stepIntervals[i]) {
       lastStepTime[i] = micros(); // Update the last step time
 
