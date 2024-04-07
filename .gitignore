@@ -6,3 +6,4 @@ camera_calibration_data/
 **/__pycache__/
 **/*.egg-info/*
 /tools/*
+**/node_modules

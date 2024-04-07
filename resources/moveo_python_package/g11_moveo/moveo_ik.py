@@ -39,6 +39,9 @@ University of Galway
 
 import matplotlib.pyplot as plt
 import numpy as np
+import base64
+from io import BytesIO
+
 from scipy.optimize import minimize
 
 class Moveo_IK():
@@ -56,6 +59,20 @@ class Moveo_IK():
             self.l1 = 0.221 # Meters
             self.l2 = 0.223
             self.l3 = 0.12
+        
+        self.fig, self.ax = plt.subplots(subplot_kw={'projection': '3d'})
+        self.line1, = self.ax.plot([], [], [], 'ro-')
+        self.line2, = self.ax.plot([], [], [], 'go-')
+        self.line3, = self.ax.plot([], [], [], 'bo-')
+        self.end_effector, = self.ax.plot([], [], [], 'ko')
+        self.ax.set_title("Inverse Kinematics - Arm Coordinates")
+        self.ax.set_xlim(-0.3, 0.3)
+        self.ax.set_ylim(-0.3, 0.3)
+        self.ax.set_zlim(-0.1, 0.4)
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.set_zlabel('Z')
+        self.ax.set_box_aspect([1, 1, 1])  # Equal aspect ratio for all axes
 
     def __objective(self, vars, x, y, a1, a2, a3):
         """
@@ -95,22 +112,22 @@ class Moveo_IK():
         theta1, theta2, theta3 = result.x
         return theta1-np.pi/2, theta2, theta3
 
-    def plot_manipulator_3d(self, theta0, theta1, theta2, theta3):
+    def update_plot_ax(self, theta0, theta1, theta2, theta3):
         """
         Plots a 3D representation of the manipulator based on the given joint angles.
-        
+
         Parameters:
         - theta0: The base rotation angle.
         - theta1, theta2, theta3: The angles of the three joints.
         """
-        theta1 = theta1 + np.pi/2
+        theta1 = theta1 + np.pi / 2
         # Base coordinates
         x0, y0, z0 = 0, 0, 0
-        
+
         x1 = self.l1 * np.cos(theta0) * np.cos(theta1)
         y1 = self.l1 * np.sin(theta0) * np.cos(theta1)
         z1 = self.l1 * np.sin(theta1)
-        
+
         x2 = x1 + self.l2 * np.cos(theta0) * np.cos(theta1 + theta2)
         y2 = y1 + self.l2 * np.sin(theta0) * np.cos(theta1 + theta2)
         z2 = z1 + self.l2 * np.sin(theta1 + theta2)
@@ -119,23 +136,23 @@ class Moveo_IK():
         y3 = y2 + self.l3 * np.sin(theta0) * np.cos(theta1 + theta2 + theta3)
         z3 = z2 + self.l3 * np.sin(theta1 + theta2 + theta3)
 
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        
-        ax.plot([x0, x1], [y0, y1], [z0, z1], 'ro-')  # Link 1
-        ax.plot([x1, x2], [y1, y2], [z1, z2], 'go-')  # Link 2
-        ax.plot([x2, x3], [y2, y3], [z2, z3], 'bo-')  # Link 3
-        ax.plot([x3], [y3], [z3], 'ko')  # End-effector
-        
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('Z')
-        ax.set_title('3D Representation of 3-Link Manipulator')
-        
-        ax.set_box_aspect([1,1,1])
-        
-        plt.show()
+        # Update the data of the existing lines
+        self.line1.set_data([x0, x1], [y0, y1])
+        self.line1.set_3d_properties([z0, z1])
 
+        self.line2.set_data([x1, x2], [y1, y2])
+        self.line2.set_3d_properties([z1, z2])
+
+        self.line3.set_data([x2, x3], [y2, y3])
+        self.line3.set_3d_properties([z2, z3])
+
+        self.end_effector.set_data([x3], [y3])
+        self.end_effector.set_3d_properties([z3])
+        
+        
+    def get_plot_figure(self):
+        return self.fig
+    
     def point_to_angles(self, x, y, z):
         """Calculates the joint angles to reach a given point in 3D space.
 

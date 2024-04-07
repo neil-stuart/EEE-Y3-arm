@@ -5,10 +5,6 @@ import matplotlib.pyplot as plt
 
 WINDOW_SIZE = 15
 
-tracker = RS2_Ball_Tracking(display=True)
-arm = BCN3D_Moveo("/dev/ttyUSB0")
-transform = TransformPoint()
-ik = Moveo_IK()
 
 class Plotter:
     def __init__(self):
@@ -22,7 +18,7 @@ class Plotter:
         self.ax.set_xlim(-1, 1)
         self.ax.set_ylim(0, 1.5)
         self.ax.set_zlim(-1, 1)
-
+        
         self.points_plot = None
 
     def update(self, points):
@@ -34,18 +30,20 @@ class Plotter:
 
         # Original zip
         xs, ys, zs = zip(*points[-30:])
-
-
         # Plot the points
         self.points_plot = self.ax.scatter(xs,ys,zs, color="red")
-
+        
         # Show plot
         plt.pause(0.001)  # Pause to allow the plot to update
-graph = Plotter()
-
 
 if __name__ == "__main__":
-    moving_avg_pts = []
+
+    tracker = RS2_Ball_Tracking(display=False)
+    arm = BCN3D_Moveo("/dev/ttyUSB0")
+    #graph = Plotter()S
+    transform = TransformPoint()
+    ik = Moveo_IK()
+
     arm_target = np.array([0,0,0])
 
     time.sleep(3)
@@ -60,12 +58,12 @@ if __name__ == "__main__":
             if ball_xyz:
                 # Use a moving average to smooth out points.
                 arm_point = transform.find_corresponding_point(ball_xyz)
-                
-                moving_avg_pts.insert(0,ball_xyz)
+                print(arm_point)
+                moving_avg_pts = np.insert(moving_avg_pts, 0, arm_point, axis=0)
                 
                 moving_avg_pts = moving_avg_pts[:WINDOW_SIZE]
-                
-                graph.update(moving_avg_pts)
+
+                #graph.update(moving_avg_pts)
 
                 mov_avg = np.mean(moving_avg_pts, axis=0)
 
@@ -81,7 +79,8 @@ if __name__ == "__main__":
                     
                     arm.go_to(*angles)
                     time.sleep(0.01)
-                pass                
+                pass
+            
     except Exception as e:
         print(e)
         tracker.stop()

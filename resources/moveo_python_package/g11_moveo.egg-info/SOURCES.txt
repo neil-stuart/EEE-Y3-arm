@@ -1,5 +1,6 @@
 setup.py
 g11_moveo/__init__.py
+g11_moveo/interface_util.py
 g11_moveo/moveo.py
 g11_moveo/moveo_ik.py
 g11_moveo/tracking.py

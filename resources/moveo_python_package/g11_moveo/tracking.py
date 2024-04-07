@@ -4,8 +4,9 @@ import cv2
 import threading
 import sys
 import cv2
+
 class RS2_Ball_Tracking():
-    def __init__(self, lower_hsv=[23, 100, 100], upper_hsv=[47, 255, 255], fps=60, width=848, height=480, display = False):
+    def __init__(self, lower_hsv=[23, 100, 100], upper_hsv=[47, 255, 255], fps=60, width=848, height=480):
     
         # Initialize the RealSense pipeline
         self.lower_hsv = np.array(lower_hsv)
@@ -19,10 +20,13 @@ class RS2_Ball_Tracking():
 
         self.config.enable_stream(rs.stream.depth, self.width, self.height, rs.format.z16, self.fps)
         self.config.enable_stream(rs.stream.color,self.width, self.height, rs.format.bgr8,self.fps)
-        self.display = display
+
         self.depth_min = 0.12 #meter
         self.depth_max = 2.5 #meter
-        
+        self.last_depth_frame = None
+
+        self.last_color_frame = None
+
         # Start streaming
         self.pipeline.start(self.config)
         self.profile = self.pipeline.get_active_profile()
@@ -30,6 +34,12 @@ class RS2_Ball_Tracking():
         self.xyz = None
         self.tracking_thread = threading.Thread(target=self.__get_ball_xyz)
         self.tracking_thread.start()
+    
+    def get_last_color_frame(self):
+        return self.last_color_frame
+    
+    def get_last_depth_frame(self):
+        return self.last_depth_frame
 
     def get_xyz(self):
         if self.xyz:
@@ -59,11 +69,10 @@ class RS2_Ball_Tracking():
             depth_frame = frames.get_depth_frame()
             color_frame = frames.get_color_frame()
 
-            color_image = np.asanyarray(color_frame.get_data())
-            
-            if(self.display):
+            color_image = np.asarray(color_frame.get_data())
 
-                cv2.imshow("Tracking",color_image)
+            #self.last_depth_frame = np.asarray(depth_frame.get_data())
+            cv2_depth_frame = cv2.applyColorMap(cv2.convertScaleAbs(np.asarray(depth_frame.get_data()),alpha=0.1),cv2.COLORMAP_AUTUMN)
             # Colour threshold the ball and return x, y pixel coordinates
             xy = self.__get_xy(color_image)
 
@@ -80,13 +89,16 @@ class RS2_Ball_Tracking():
 
                 # Project depth pixel point to the 3D space
                 try:
-                    xyz = rs.rs2_deproject_pixel_to_point(depth_intrin, [int(x),int(y)], depth_frame.get_distance(int(x),int(y)))
-                    self.xyz = xyz
+                    dist = depth_frame.get_distance(int(x),int(y))+0.028
+                    self.xyz = rs.rs2_deproject_pixel_to_point(depth_intrin, [int(x),int(y)], dist)
+                    cv2.circle(cv2_depth_frame, (int(x), int(y)), 5, (255, 0, 0), 3)
+                    cv2.putText(cv2_depth_frame,f"depth {round(dist,3)}m",(int(x)+30,int(y)),cv2.FONT_HERSHEY_PLAIN,2.5,(255,0,0),2)
                 except:
                     self.xyz = None
 
-        self.pipeline.stop()
-        
+            self.last_depth_frame = cv2_depth_frame
+            
+
 
     def __get_xy(self, color_image):
         # Color threshold to find the ball
@@ -94,17 +106,18 @@ class RS2_Ball_Tracking():
         mask = cv2.inRange(hsv_image, self.lower_hsv, self.upper_hsv)
                 # Find contours
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
+
         if contours:
             # Find the largest contour
             largest_contour = max(contours, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(largest_contour)
-            if self.display:
-                image_with_contours = color_image.copy()  # Make a copy to avoid altering the original image
-                cv2.drawContours(image_with_contours, largest_contour, -1, (0, 255, 0), 2)
-                cv2.imshow("Tracking", image_with_contours)
-                cv2.waitKey(1)  # Wait for 1 millisecond
+            cv2.drawContours(color_image, largest_contour, -1, (0, 255, 0), 2)
+            cv2.circle(color_image, (int(x), int(y)), int(radius), (0, 0, 255), 2)
+            cv2.putText(color_image, f'x: {int(x)}, y: {int(y)}',(int(x)+50, int(y)+20),cv2.FONT_HERSHEY_PLAIN,2.5,(0,255,220),2)
+            self.last_color_frame = color_image
             if radius > 10:  # Minimum size to consider
                 return int(x), int(y)
+            
+        self.last_color_frame = color_image
                 
         return None
