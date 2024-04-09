@@ -8,39 +8,8 @@ Project: Inverse Kinematics Solution for Moveo Robotic Arm
 University of Galway
 """
 
-
-# ROUGH WORK
-
-# r = sqrt(a^2+b^2) [a, b in terms of angles of interest - Theta_1,2,3]
-# Phi = 90-atan(b/a)
-# Theta = Theta_0
-
-# x = rsin(\Phi)cos(\Theta)
-# y = rsin(\Phi)sin(\Theta)
-# z = rcos(\Theta)
-
-# Lets say x,y,z = [2,1,4]
-
-# Then \Theta = atan(y/x) = atan(1/2)
-
-# r = sqrt(4+1+16) = sqrt(21)
-
-# SO, a^2+b^2 = 21
-
-# Therefore (l_1*cos(\Theta_1)+l_2*cos(\Theta_2)+l_3*cos(\Theta_3))^2
-#           +(l_1*sin(\Theta_1)+l_2*sin(\Theta_2)+l_3*sin(\Theta_3))^2
-#           = 21
-# THIS NEEDS TO BE SOLVED FOR \Theta_1, \Theta_2 and \Theta_3, i.e. a solution matrix needs to be made
-
-
-# l1,l2,l3 = [1,1,1]
-
-# x,y,z = [2,1,4]
-
 import matplotlib.pyplot as plt
 import numpy as np
-import base64
-from io import BytesIO
 
 from scipy.optimize import minimize
 
@@ -70,6 +39,7 @@ class Moveo_IK():
         self.ax.set_ylim(-0.3, 0.3)
         self.ax.set_zlim(-0.1, 0.4)
         self.ax.set_xlabel('X')
+        self.scatter = self.ax.scatter([0], [0], [0])
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
         self.ax.set_box_aspect([1, 1, 1])  # Equal aspect ratio for all axes
@@ -112,6 +82,9 @@ class Moveo_IK():
         theta1, theta2, theta3 = result.x
         return theta1-np.pi/2, theta2, theta3
 
+    def update_plot_pt(self, xs,ys,zs):
+        self.scatter._offsets3d = (xs[:5],ys[:5],zs[:5])
+
     def update_plot_ax(self, theta0, theta1, theta2, theta3):
         """
         Plots a 3D representation of the manipulator based on the given joint angles.
@@ -148,7 +121,6 @@ class Moveo_IK():
 
         self.end_effector.set_data([x3], [y3])
         self.end_effector.set_3d_properties([z3])
-        
         
     def get_plot_figure(self):
         return self.fig

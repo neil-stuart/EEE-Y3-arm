@@ -4,8 +4,20 @@ import cv2
 import threading
 import sys
 import cv2
+"""
+Author: Neil Stuart
+Group: 11
+Email: n.stuart3@universityofgalway.ie
+Date: March 2024
 
+The RS2_Ball_Tracking class was used in the group 11 third year project 
+with the intel realsense camera to track a tennis ball. 
+"""
 class RS2_Ball_Tracking():
+    """
+    The RS2_Ball_Tracking class was used in the group 11 third year project 
+    with the intel realsense camera to track a tennis ball. 
+    """
     def __init__(self, lower_hsv=[23, 100, 100], upper_hsv=[47, 255, 255], fps=60, width=848, height=480):
     
         # Initialize the RealSense pipeline
@@ -36,12 +48,21 @@ class RS2_Ball_Tracking():
         self.tracking_thread.start()
     
     def get_last_color_frame(self):
+        """
+        Returns a cv2 compatible annotated frame of the last color frame.
+        """
         return self.last_color_frame
     
     def get_last_depth_frame(self):
+        """
+        Returns a cv2 compatible annotated frame of the last depth frame.
+        """
         return self.last_depth_frame
 
     def get_xyz(self):
+        """
+        Returns the current/most recent XYZ location of the ball in 3D space.
+        """
         if self.xyz:
             return self.xyz
         
@@ -52,7 +73,6 @@ class RS2_Ball_Tracking():
         self.running = False
 
         self.pipeline.stop()
-        cv2.destroyAllWindows()
 
     def __get_ball_xyz(self):
         while self.running:

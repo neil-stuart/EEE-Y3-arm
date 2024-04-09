@@ -13,10 +13,10 @@ const int STEPPERS_PINS[N_STEPPERS][3] = {
 
 const int STEPPER_PARAMS[N_STEPPERS][4] = { 
   // Stepper parameters given as MIN_POSITION, MAX_POSITION, MIN_FREQUENCY, MAX_FREQUENCY
-  {-1000,1000,300,1000}, /// 1500
-  {-680*4,4*680,400,1250}, // 3000
-  {-1800,1800,500,1500}, // 4000
-  {-500,500,300,600} // 1000 
+  {-1000,1000,300,700}, /// 1500
+  {-680*4,4*680,500,1000}, // 3000
+  {-1800,1800,300,1000}, // 4000
+  {-500,500,300,400} // 1000 
 };
 
 
@@ -73,9 +73,9 @@ void updateSteppers() {
       if(output[i] == 0){
         continue;
       } else if (output[i] > 0) {
-        digitalWrite(STEPPERS_PINS[i][1], LOW); // Set direction pin for CW
+        digitalWrite(STEPPERS_PINS[i][1], HIGH); // Set direction pin for CW
       } else {
-        digitalWrite(STEPPERS_PINS[i][1], HIGH); // Set direction pin for CCW
+        digitalWrite(STEPPERS_PINS[i][1], LOW); // Set direction pin for CCW
       }
       
       digitalWrite(STEPPERS_PINS[i][0], HIGH); // Step pulse

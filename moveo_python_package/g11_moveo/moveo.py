@@ -1,12 +1,13 @@
 """
 Author: Neil Stuart
 Group: 11
-Email: b.stuart3@universityofgalway.ie
+Email: n.stuart3@universityofgalway.ie
 Date: March 2024
 
 Project: Control Solution for Moveo Robotic Arm
 University of Galway
 """
+
 import serial
 import math
 

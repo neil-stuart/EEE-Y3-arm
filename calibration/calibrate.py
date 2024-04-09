@@ -1,6 +1,6 @@
 from g11_moveo import BCN3D_Moveo, Moveo_IK, RS2_Ball_Tracking
 import time
-
+import cv2
 import numpy as np
 arm = BCN3D_Moveo("/dev/ttyUSB0")
 arm_pos = [0,0,0]
@@ -9,18 +9,21 @@ tracked_pos = []
 
 i = 0
 
-tracker = RS2_Ball_Tracking(display=True)
+tracker = RS2_Ball_Tracking()
 
 ik = Moveo_IK()
 
 time.sleep(3)
 
-calibration_points = [ # Grid of points
-    [0.3,0,0.0],
+calibration_points = [
+    [0.3,0,0.1],
     [0.3,0.3,0],
-    [0.3,0.3,0.3],
-
-    [0.3,0.3,0.2],
+    [0.3,0.15,0.3],
+    [0.3,-0.1,0.4], 
+    [0.15,0,0.15],
+    [0.25,0.1,0.25],
+    [0.3,0.2,0.25],
+    [0.2,0.3,0.35],
 ]
 
 def save_point():

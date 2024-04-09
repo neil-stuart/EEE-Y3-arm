@@ -15,14 +15,7 @@ This project aims to develop and implement a system that integrates advanced sen
 
 - **Robotic Arm**: BCN3D Moveo, chosen for its affordability, precision, and adaptability to project needs.
 - **Sensing and Vision**: Utilizes an Intel RealSense Camera for 3D object location and tracking.
-- **Computing Platform**: Runs on a Raspberry Pi 4, equipped to handle real-time image processing and motor control tasks.
-- **Software Stack**:
-  - **OpenCV in Python**: For object detection and vision processing.
-  - **Custom PID Control**: Implemented for dynamic object interaction, aiming for precision in motor responses based on sensor inputs.
 
-## Workspace Structure 📂
-
-The ROS workspace is organized to facilitate development, testing, and deployment of the project components. Below is the structure of the workspace **UPDATE**
 
 ## Future Work 🔮
 
@@ -30,6 +23,6 @@ The ROS workspace is organized to facilitate development, testing, and deploymen
 - **Enhanced Motor Control**: Investigate more advanced algorithms for motor control to improve precision and response time.
 - **Wider Object Interaction**: Expand the system’s capabilities to interact with a broader range of object types and trajectories.
 
-## Acknowledgments 🙏
+## Acknowledgments 
 
 Special thanks to Dr. Brian Deegan and Dr. Soumyajyoti Maji for their guidance throughout the project, and to Mr. Myles Meehan and Mr. Darragh Mullins for their assistance in sourcing parts.
