@@ -67,7 +67,7 @@ if __name__ == "__main__":
     container_frame.configure(bg='white')
 
     # Place the arm_control_widget in the container frame
-    arm_control_widget = Arm_Control(lambda theta0, theta1, theta2, theta3: theta0+1, container_frame, update_func=ik.update_plot_ax)
+    arm_control_widget = Arm_Control(lambda theta0, theta1, theta2, theta3: arm.go_to(theta0,theta1,theta2,theta3), container_frame, update_func=ik.update_plot_ax)
     arm_control_widget.grid(row=0, column=0)
     arm_control_widget.configure(bg='white')
 
