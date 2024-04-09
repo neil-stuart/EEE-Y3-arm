@@ -1,7 +1,7 @@
 # Real-Time Object Detection and Reactive Motor Control for Dynamic Object Interaction 
 ## Project Overview 📌
 
-This project aims to develop and implement a system that integrates advanced sensor technologies and real-time object detection algorithms with an open-source robotic arm. The goal is to enable the arm to react to and attempt to catch objects thrown towards it, demonstrating the practical application of sensor technologies, computer vision, and control systems in dynamic and real-time object interaction.
+This project aims to develop and implement a system that integrates advanced sensor technologies and real-time object detection algorithms with an open-source robotic arm. The goal is to enable the arm to map and interact with objects in its environment, demonstrating the practical application of sensor technologies, computer vision, and control systems in dynamic and real-time object interaction.
 
 ### Installation and Running
 1. Upload stepper_ctrlv2.ino to arduino nano. 
