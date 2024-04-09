@@ -1,9 +1,12 @@
 ### Installation and Running
 1. Upload stepper_ctrlv2.ino to arduino nano. 
 2. Connect arduino pins as they are indicated in stepper_ctrlv2.ino.
-3. Install the python package - navigate to the package directory moveo_python_package and type `pip install .`
+3. Install the python package - navigate to the package directory moveo_python_package and type 
+`cd moveo_python_package`
+`pip install .`
 4. Find the COM port that arduino is connected to and set that value at the head of the client.py script.
-5. Run client.py - `python ./client/client.py`
+5. Run client.py - 
+`python ./client/client.py`
 
 # Real-Time Object Detection and Reactive Motor Control for Dynamic Object Interaction 
 ## Project Overview 📌
