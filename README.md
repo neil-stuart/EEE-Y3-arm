@@ -4,6 +4,7 @@
 3. Install the python package:
 
 `cd moveo_python_package`
+
 `pip install .`
 
 5. Find the COM port that arduino is connected to and set that value at the head of the client.py script.
