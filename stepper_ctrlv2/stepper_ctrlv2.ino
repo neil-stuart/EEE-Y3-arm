@@ -4,6 +4,7 @@ const int N_STEPPERS = 4;
 
 const int PULSE_WIDTH = 10; //us
 
+// In the order STEP, CW, EN.
 const int STEPPERS_PINS[N_STEPPERS][3] = {
   {2,3,4}, // BASE ROTATION STEPPER
   {5,6,7}, // BASE ARTICULATION DOUBLE STEPPER
