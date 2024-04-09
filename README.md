@@ -19,7 +19,7 @@ This project aims to develop and implement a system that integrates advanced sen
 - Neil Stuart
 - Jake van de Beek
 
-### Supervisors 👨‍🏫
+### Supervisors 
 - Dr. Brian Deegan
 - Co-Assessor: Dr. Soumyajyoti Maji
 
@@ -29,7 +29,7 @@ This project aims to develop and implement a system that integrates advanced sen
 - **Sensing and Vision**: Utilizes an Intel RealSense Camera for 3D object location and tracking.
 
 
-## Future Work 🔮
+## Future Work
 
 - **Machine Learning for Object Detection**: Explore integrating machine learning models for enhanced object detection and classification.
 - **Enhanced Motor Control**: Investigate more advanced algorithms for motor control to improve precision and response time.
