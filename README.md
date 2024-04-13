@@ -41,4 +41,4 @@ This project aims to develop and implement a system that integrates advanced sen
 
 ## Acknowledgments 
 
-Special thanks to Dr. Brian Deegan and Dr. Soumyajyoti Maji for their guidance throughout the project, and to Mr. Myles Meehan and Mr. Darragh Mullins for their assistance in sourcing parts.
+Special thanks to Dr. Brian Deegan and Dr. Soumyajyoti Maji for their guidance throughout the project, and to Mr. Myles Meehan and Dr. Darragh Mullins for their assistance in sourcing parts.
