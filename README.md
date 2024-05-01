@@ -13,6 +13,7 @@
 `python ./client/client.py`
 
 *Stepper drivers take 24V supply.
+*Arm doesn't have any feedback so it needs to be started straight up as its initial position. 
 
 ## Real-Time Object Detection and Reactive Motor Control for Dynamic Object Interaction 
 ### Overview 📌
