@@ -12,8 +12,8 @@
 
 `python ./client/client.py`
 
-* Stepper drivers take 24V supply.
-* 
+*Stepper drivers take 24V supply.
+
 ## Real-Time Object Detection and Reactive Motor Control for Dynamic Object Interaction 
 ### Overview 📌
 
