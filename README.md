@@ -20,15 +20,6 @@
 
 This project aims to develop and implement a system that integrates advanced sensor technologies and real-time object detection algorithms with an open-source robotic arm. The goal is to enable the arm to map and interact with objects in its environment, demonstrating the practical application of sensor technologies, computer vision, and control systems in dynamic and real-time object interaction.
 
-
-
 ### Contributors 
 - Neil Stuart
 - Jake van de Beek
-
-
-## Future Work
-
-- **Machine Learning for Object Detection**: Explore integrating machine learning models for enhanced object detection and classification.
-- **Enhanced Motor Control**: Investigate more advanced algorithms for motor control to improve precision and response time.
-- **Wider Object Interaction**: Expand the system’s capabilities to interact with a broader range of object types and trajectories.
